@@ -33,6 +33,7 @@ def parse_args():
     parser.add_argument("--decay", type=int, default=150000)
     parser.add_argument("--lr", type=float, default=0.0001)
     parser.add_argument("--clip", type=float, default=10.0)
+    parser.add_argument("--load_path", type=str, default=None)
 
     parser.add_argument("--loss_fn", type=str, 
                         choices=["MSE", "L1", "SmoothL1"], default="L1")

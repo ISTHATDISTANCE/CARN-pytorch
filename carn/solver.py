@@ -2,7 +2,7 @@ import os
 import random
 import numpy as np
 import scipy.misc as misc
-import skimage.measure as measure
+import skimage.metrics as metrics
 from tensorboardX import SummaryWriter
 import torch
 import torch.nn as nn
@@ -82,7 +82,7 @@ class Solver():
                 
                 self.optim.zero_grad()
                 loss.backward()
-                nn.utils.clip_grad_norm(self.refiner.parameters(), cfg.clip)
+                nn.utils.clip_grad_norm_(self.refiner.parameters(), cfg.clip)
                 self.optim.step()
 
                 learning_rate = self.decay_learning_rate()
@@ -91,17 +91,17 @@ class Solver():
                 
                 self.step += 1
                 if cfg.verbose and self.step % cfg.print_interval == 0:
-                    if cfg.scale > 0:
-                        psnr = self.evaluate("dataset/Urban100", scale=cfg.scale, num_step=self.step)
-                        self.writer.add_scalar("Urban100", psnr, self.step)
-                    else:    
-                        psnr = [self.evaluate("dataset/Urban100", scale=i, num_step=self.step) for i in range(2, 5)]
-                        self.writer.add_scalar("Urban100_2x", psnr[0], self.step)
-                        self.writer.add_scalar("Urban100_3x", psnr[1], self.step)
-                        self.writer.add_scalar("Urban100_4x", psnr[2], self.step)
+                    # if cfg.scale > 0:
+                    #     psnr = self.evaluate("dataset/Urban100", scale=cfg.scale, num_step=self.step)
+                    #     self.writer.add_scalar("Urban100", psnr, self.step)
+                    # else:    
+                    #     psnr = [self.evaluate("dataset/Urban100", scale=i, num_step=self.step) for i in range(2, 5)]
+                    #     self.writer.add_scalar("Urban100_2x", psnr[0], self.step)
+                    #     self.writer.add_scalar("Urban100_3x", psnr[1], self.step)
+                    #     self.writer.add_scalar("Urban100_4x", psnr[2], self.step)
                             
                     self.save(cfg.ckpt_dir, cfg.ckpt_name)
-
+            print("step: ", self.step)
             if self.step > cfg.max_steps: break
 
     def evaluate(self, test_data_dir, scale=2, num_step=0):
@@ -186,5 +186,5 @@ def psnr(im1, im2):
         
     im1 = im2double(im1)
     im2 = im2double(im2)
-    psnr = measure.compare_psnr(im1, im2, data_range=1)
+    psnr = metrics.peak_signal_noise_ratio(im1, im2, data_range=1)
     return psnr
