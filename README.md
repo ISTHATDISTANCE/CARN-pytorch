@@ -1,15 +1,10 @@
-# Fast, Accurate, and Lightweight Super-Resolution with Cascading Residual Network
-Namhyuk Ahn, Byungkon Kang, Kyung-Ah Sohn.<br>
-European Conference on Computer Vision (ECCV), 2018. 
-[[arXiv](https://arxiv.org/abs/1803.08664)]
-
-<img src="assets/benchmark.png">
+# Efficient Cascading Dense Network
+Tao Lu, Siyuan Xu, Tianyue Li.<br>
+EECS 442 course project, WN22. 
 
 ### Abstract
-In recent years, deep learning methods have been successfully applied to single-image super-resolution tasks. Despite their great performances, deep learning methods cannot be easily applied to real-world applications due to the requirement of heavy computation. In this paper, we address this issue by proposing an accurate and lightweight deep learning model for image super-resolution. In detail, we design an architecture that implements a cascading mechanism upon a residual network. We also present a variant model of the proposed cascading residual network to further improve efficiency. Our extensive experiments show that even with much fewer parameters and operations, our models achieve performance comparable to that of state-of-the-art methods.
-
-### FAQs
-1. Can't reproduce PSNR/SSIM as recorded in the paper: See [issue#6](https://github.com/nmhkahn/CARN-pytorch/issues/6)
+We build our Efficient Cascading Dense Network (ECDN) mainly on CARN. We choose this method because compared with other CNN for SR task, CARN achieved a more ideal balance between the training speed and accuracy. 
+But still, CARN is not so effective. It requires more than 4 GPU-days to reach a good performance. Also, their parameter size is too large and can be reduced while preserving the performance to the large extent. Our ECDN, as well as its slimmer version, ECDN_M, achieves its performance with almost half of the original parameters.
 
 ### Requirements
 - Python 3
@@ -60,7 +55,7 @@ We provide our results on four benchmark dataset (Set5, Set14, B100 and Urban100
 ### Training Models
 Here are our settings to train CARN and CARN-M. Note: We use two GPU to utilize large batch size, but if OOM error arise, please reduce batch size.
 ```shell
-# For CARN
+# For ECDN
 $ python carn/train.py --patch_size 64 \
                        --batch_size 64 \
                        --max_steps 600000 \
@@ -69,8 +64,9 @@ $ python carn/train.py --patch_size 64 \
                        --ckpt_name carn \
                        --ckpt_dir checkpoint/carn \
                        --scale 0 \
-                       --num_gpu 2
-# For CARN-M
+                       --num_gpu 2 \
+                       --group 4
+# For ECDN-M
 $ python carn/train.py --patch_size 64 \
                        --batch_size 64 \
                        --max_steps 600000 \
@@ -80,7 +76,8 @@ $ python carn/train.py --patch_size 64 \
                        --ckpt_dir checkpoint/carn_m \
                        --scale 0 \
                        --group 4 \
-                       --num_gpu 2
+                       --num_gpu 2 \
+                       --loss_fn SmoothL1
 ```
 In the `--scale` argument, [2, 3, 4] is for single-scale training and 0 for multi-scale learning. `--group` represents group size of group convolution. The differences from previous version are: 1) we increase batch size and patch size to 64 and 64. 2) Instead of using `reduce_upsample` argument which replace 3x3 conv of the upsample block to 1x1, we use group convolution as same way to the efficient residual block.
 
@@ -88,14 +85,7 @@ In the `--scale` argument, [2, 3, 4] is for single-scale training and 0 for mult
 **Note:** As pointed out in [#2](https://github.com/nmhkahn/CARN-pytorch/issues/2), previous Urban100 benchmark dataset was incorrect. The issue is related to the mismatch of the HR image resolution from the original dataset in x2 and x3 scale. We correct this problem, and provided dataset and results are fixed ones.
 
 <img src="assets/table.png">
-<img src="assets/visual.png">
+<img src="assets/fig1.png">
+<img src="assets/fig2.png">
+<img src="assets/fig3.png">
 
-### Citation
-```
-@article{ahn2018fast,
-  title={Fast, Accurate, and Lightweight Super-Resolution with Cascading Residual Network},
-  author={Ahn, Namhyuk and Kang, Byungkon and Sohn, Kyung-Ah},
-  journal={arXiv preprint arXiv:1803.08664},
-  year={2018}
-}
-```
