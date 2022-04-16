@@ -50,11 +50,10 @@ class Net(nn.Module):
         self.b1 = DenseBlock(16, 64, 64, 4, group)
         self.b2 = DenseBlock(16, 64, 64, 4, group)
         self.b3 = DenseBlock(16, 64, 64, 4, group)
-        # self.b4 = DenseBlock(16, 64, 64, 4)
         self.c1 = ops.BasicBlock(64*2, 64, 1, 1, 0)
         self.c2 = ops.BasicBlock(64*3, 64, 1, 1, 0)
         self.c3 = ops.BasicBlock(64*4, 64, 1, 1, 0)
-        # self.c4 = ops.BasicBlock(64*5, 64, 1, 1, 0)
+        self.c4 = ops.BasicBlock(64*5, 64, 1, 1, 0)
         self.upsample = ops.UpsampleBlock(64, scale=scale, 
                                           multi_scale=multi_scale,
                                           group=group)
@@ -68,21 +67,21 @@ class Net(nn.Module):
         b1 = self.b1(o0)
         c1 = torch.cat([c0, b1], dim=1)
         o1 = self.c1(c1)
+        o1 = self.upsample(o1, scale=scale)
+        o1 = nn.functional.interpolate(o1, scale_factor=1/scale)
         
         b2 = self.b2(o1)
         c2 = torch.cat([c1, b2], dim=1)
         o2 = self.c2(c2)
+        o2 = self.upsample(o2, scale=scale)
+        o2 = nn.functional.interpolate(o2, scale_factor=1/scale)
         
         b3 = self.b3(o2)
         c3 = torch.cat([c2, b3], dim=1)
         o3 = self.c3(c3)
 
-        # b4 = self.b3(o3)
-        # c4 = torch.cat([c3, b4], dim=1)
-        # o4 = self.c3(c4)
-
-        # out = self.upsample(o4, scale=scale)
         out = self.upsample(o3, scale=scale)
+
         out = self.exit(out)
         out = self.add_mean(out)
 
