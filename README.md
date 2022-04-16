@@ -32,7 +32,6 @@ We use DIV2K dataset for training and Set5, Set14, B100 and Urban100 dataset for
 ```shell
 $ cd datasets && python div2h5.py
 ```
-3. Other benchmark datasets can be downloaded in [Google Drive](https://drive.google.com/drive/folders/1t2le0-Wz7GZQ4M2mJqmRamw5o4ce2AVw?usp=sharing). Same as DIV2K, please put all the datasets in `dataset` directory.
 
 ### Test Pretrained Models
 We provide the pretrained models in `checkpoint` directory. To test CARN on benchmark dataset:
@@ -52,19 +51,18 @@ $ python carn/sample.py --model carn_m \
                         --sample_dir <sample_dir> \
                         --group 4
 ```
-We provide our results on four benchmark dataset (Set5, Set14, B100 and Urban100). [Google Drive](https://drive.google.com/drive/folders/1R4vZMs3Adf8UlYbIzStY98qlsl5y1wxH?usp=sharing)
 
 ### Training Models
-Here are our settings to train CARN and CARN-M. Note: We use two GPU to utilize large batch size, but if OOM error arise, please reduce batch size.
+Here are our settings to train ECDN and ECDN-M. Note: We use two GPU to utilize large batch size, but if OOM error arise, please reduce batch size.
 ```shell
 # For ECDN
 $ python carn/train.py --patch_size 64 \
                        --batch_size 64 \
                        --max_steps 600000 \
                        --decay 400000 \
-                       --model carn \
-                       --ckpt_name carn \
-                       --ckpt_dir checkpoint/carn \
+                       --model ecdn \
+                       --ckpt_name ecdn \
+                       --ckpt_dir checkpoint/ecdn \
                        --scale 0 \
                        --num_gpu 2 \
                        --group 4
@@ -73,9 +71,9 @@ $ python carn/train.py --patch_size 64 \
                        --batch_size 64 \
                        --max_steps 600000 \
                        --decay 400000 \
-                       --model carn_m \
-                       --ckpt_name carn_m \
-                       --ckpt_dir checkpoint/carn_m \
+                       --model ecdn_m \
+                       --ckpt_name ecdn_m \
+                       --ckpt_dir checkpoint/ecdn_m \
                        --scale 0 \
                        --group 4 \
                        --num_gpu 2 \
