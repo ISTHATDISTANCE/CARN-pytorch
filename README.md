@@ -1,6 +1,8 @@
 # Efficient Cascading Dense Network
 Tao Lu, Siyuan Xu, Tianyue Li.<br>
 EECS 442 course project, WN22. 
+<br>
+Works on: amhyuk Ahn, Byungkon Kang, and Kyung-Ah Sohn. Fast, accurate, and lightweight super-resolution with cascading residual network. In Proceedings of the European conference on computer vision (ECCV), pages 252–268, 2018.
 
 ### Abstract
 We build our Efficient Cascading Dense Network (ECDN) mainly on CARN. We choose this method because compared with other CNN for SR task, CARN achieved a more ideal balance between the training speed and accuracy. 
@@ -82,9 +84,7 @@ $ python carn/train.py --patch_size 64 \
 In the `--scale` argument, [2, 3, 4] is for single-scale training and 0 for multi-scale learning. `--group` represents group size of group convolution. The differences from previous version are: 1) we increase batch size and patch size to 64 and 64. 2) Instead of using `reduce_upsample` argument which replace 3x3 conv of the upsample block to 1x1, we use group convolution as same way to the efficient residual block.
 
 ### Results
-**Note:** As pointed out in [#2](https://github.com/nmhkahn/CARN-pytorch/issues/2), previous Urban100 benchmark dataset was incorrect. The issue is related to the mismatch of the HR image resolution from the original dataset in x2 and x3 scale. We correct this problem, and provided dataset and results are fixed ones.
-
-<img src="assets/table.png">
+<img src="assets/mytable.png">
 <img src="assets/fig1.png">
 <img src="assets/fig2.png">
 <img src="assets/fig3.png">
