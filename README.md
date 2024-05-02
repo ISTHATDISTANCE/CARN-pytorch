@@ -1,6 +1,6 @@
 # Efficient Cascading Dense Network
 Tao Lu, Siyuan Xu, Tianyue Li.<br>
-EECS 442 course project, WN22. [full report](https://drive.google.com/file/d/1ZDtM1NRbXP7Tcg3S0undq-CanPunQmoY/view?usp=sharing)
+EECS 442 course project, WN22. [full report](https://isthatdistance.github.io/assets/pdf/EECS442_Final_Report.pdf)
 <br>
 Works on: amhyuk Ahn, Byungkon Kang, and Kyung-Ah Sohn. Fast, accurate, and lightweight super-resolution with cascading residual network. In Proceedings of the European conference on computer vision (ECCV), pages 252–268, 2018.
 
